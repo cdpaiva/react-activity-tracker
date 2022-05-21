@@ -48,15 +48,18 @@ const App = () => {
   }
 
   const buttons = () => {
+    //No activity is being tracked
     if (!timerOn && timer === 0) {
       return <button onClick={start} disabled={!activity}>Start</button>
     }
+    //An activity is being tracked
     if (!timerOn && timer !== 0) {
       return <>
         <button onClick={start}>Resume</button>
         <button onClick={stop}>Stop</button>
       </>
     }
+    //An activity is paused
     if (timerOn) {
       return <>
         <button onClick={stop}>Stop</button>
