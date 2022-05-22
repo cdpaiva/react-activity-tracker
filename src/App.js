@@ -22,6 +22,7 @@ const App = () => {
   }
 
   const pause = () => {
+    //TODO: on paused status there should be no input available
     setTimerOn(false)
   }
 
@@ -50,46 +51,51 @@ const App = () => {
   const buttons = () => {
     //No activity is being tracked
     if (!timerOn && timer === 0) {
-      return <button onClick={start} disabled={!activity}>Start</button>
+      return <button className='border-2 border-black px-4 py-2 hover:bg-green-300 disabled:bg-gray-300 rounded disabled:cursor-not-allowed' onClick={start} disabled={!activity}>Start</button>
     }
     //An activity is being tracked
     if (!timerOn && timer !== 0) {
       return <>
-        <button onClick={start}>Resume</button>
-        <button onClick={stop}>Stop</button>
+        <button className='border-2 border-black px-4 py-2 mr-2 hover:bg-green-300 rounded' onClick={start}>Resume</button>
+        <button className='border-2 border-black px-4 py-2 hover:bg-green-300 rounded' onClick={stop}>Stop</button>
       </>
     }
     //An activity is paused
     if (timerOn) {
       return <>
-        <button onClick={stop}>Stop</button>
-        <button onClick={pause}>Pause</button>
+        <button className='border-2 border-black px-4 py-2 mr-2 hover:bg-green-300 rounded' onClick={stop}>Stop</button>
+        <button className='border-2 border-black px-4 py-2 hover:bg-green-300 rounded' onClick={pause}>Pause</button>
       </>
     }
   }
 
   return (
-    <>
-      <h1>Activity Tracker</h1>
+    <div className='container mx-auto'>
+      <h1 className='font-extrabold text-4xl text-center my-4'>Activity Tracker</h1>
       <Timer timerOn={timerOn} timer={timer} setTimer={setTimer} />
-
+      <div className='flex flex-col h-24'>
       {
         timerOn
-          ? <div>Tracking {activity}</div>
-          : <>
-            <div>
+        ? <div className='text-xl italic self-center my-auto'>Tracking {activity}</div>
+        : <>
+            <div className='text-xl italic mb-4'>
               Name the activity to track:
             </div>
-            <input type="text" onChange={e => setActivity(e.target.value)} value={activity}>
+            <input className='bg-green-300 border-b-2 border-black h-10 w-full mb-4' type="text" onChange={e => setActivity(e.target.value)} value={activity}>
             </input>
           </>
       }
-      <div>
+      </div>
+      <div className='flex justify-center mb-4'>
         {buttons()}
       </div>
-      {activities.map(a =>
-        <ActivityCard {...a} remove={remove} retrack={retrack} key={a.id} />)}
-    </>
+      <div className='w-3/4 mx-auto '>
+        <h3 className='text-xl mb-2 underline'>Last Activities:</h3>
+        {activities.length === 0 && <p className='italic'>There are no activities yet. After tracking one, you can see the results here.</p>}
+        {activities.map(a =>
+          <ActivityCard {...a} remove={remove} retrack={retrack} key={a.id} />)}
+      </div>
+    </div>
   )
 }
 

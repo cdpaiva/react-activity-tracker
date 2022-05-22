@@ -9,8 +9,10 @@ const Timer = ({ timer, setTimer, timerOn }) => {
     const seconds = ("0" + (Math.floor(timer) % 60)).slice(-2);
 
     return (
-        <div>
-            {hours} : {minutes} : {seconds}
+        <div className="flex justify-center">
+            <div className="text-3xl text-center border-2 border-green-700 rounded py-3 px-6 max-w-sm">
+                {hours} : {minutes} : {seconds}
+            </div>
         </div>
     )
 }
