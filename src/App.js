@@ -22,7 +22,6 @@ const App = () => {
   }
 
   const pause = () => {
-    //TODO: on paused status there should be no input available
     setTimerOn(false)
   }
 
@@ -41,7 +40,9 @@ const App = () => {
   }
 
   const remove = (id) => {
-    setActivities(activities.filter(a => a.id !== id))
+    if(window.confirm("Please confirm you want to delete this activity")){
+      setActivities(activities.filter(a => a.id !== id))
+    }
   }
 
   const retrack = (activity) => {
@@ -51,20 +52,20 @@ const App = () => {
   const buttons = () => {
     //No activity is being tracked
     if (!timerOn && timer === 0) {
-      return <button className='border-2 border-black px-4 py-2 hover:bg-green-300 disabled:bg-gray-300 rounded disabled:cursor-not-allowed' onClick={start} disabled={!activity}>Start</button>
+      return <button className='btn btn-primary disabled:btn-disabled' onClick={start} disabled={!activity}>Start</button>
     }
-    //An activity is being tracked
+    //An activity is paused 
     if (!timerOn && timer !== 0) {
       return <>
-        <button className='border-2 border-black px-4 py-2 mr-2 hover:bg-green-300 rounded' onClick={start}>Resume</button>
-        <button className='border-2 border-black px-4 py-2 hover:bg-green-300 rounded' onClick={stop}>Stop</button>
+        <button className='btn btn-primary mr-2' onClick={start}>Resume</button>
+        <button className='btn btn-secondary' onClick={stop}>Stop</button>
       </>
     }
-    //An activity is paused
+    //An activity is being tracked
     if (timerOn) {
       return <>
-        <button className='border-2 border-black px-4 py-2 mr-2 hover:bg-green-300 rounded' onClick={stop}>Stop</button>
-        <button className='border-2 border-black px-4 py-2 hover:bg-green-300 rounded' onClick={pause}>Pause</button>
+        <button className='btn btn-warning mr-2' onClick={pause}>Pause</button>
+        <button className='btn btn-secondary' onClick={stop}>Stop</button>
       </>
     }
   }
@@ -75,13 +76,13 @@ const App = () => {
       <Timer timerOn={timerOn} timer={timer} setTimer={setTimer} />
       <div className='flex flex-col h-24'>
       {
-        timerOn
+        timerOn || timer !== 0
         ? <div className='text-xl italic self-center my-auto'>Tracking {activity}</div>
         : <>
             <div className='text-xl italic mb-4'>
               Name the activity to track:
             </div>
-            <input className='bg-green-300 border-b-2 border-black h-10 w-full mb-4' type="text" onChange={e => setActivity(e.target.value)} value={activity}>
+            <input className='border-b-2 border-black h-10 w-full mb-4' type="text" onChange={e => setActivity(e.target.value)} value={activity}>
             </input>
           </>
       }
@@ -90,7 +91,7 @@ const App = () => {
         {buttons()}
       </div>
       <div className='w-3/4 mx-auto '>
-        <h3 className='text-xl mb-2 underline'>Last Activities:</h3>
+        <h3 className='text-xl mb-2 underline'>Past Activities:</h3>
         {activities.length === 0 && <p className='italic'>There are no activities yet. After tracking one, you can see the results here.</p>}
         {activities.map(a =>
           <ActivityCard {...a} remove={remove} retrack={retrack} key={a.id} />)}
